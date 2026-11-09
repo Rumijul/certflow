@@ -12,6 +12,17 @@ export interface TemplateField {
   bold?: boolean;
 }
 
+export interface TemplateImageOverlay {
+  id: string;
+  name: string;
+  type: 'signature' | 'logo' | 'seal' | 'badge';
+  dataUrl: string;
+  x: number; // percentage (0 to 100)
+  y: number; // percentage (0 to 100)
+  width: number; // percentage (0 to 100)
+  aspectRatio: number; // natural width / natural height
+}
+
 export interface CertificateTemplate {
   id: string;
   title: string;
@@ -20,6 +31,7 @@ export interface CertificateTemplate {
   width: number; // native px width
   height: number; // native px height
   fields: TemplateField[];
+  imageOverlays?: TemplateImageOverlay[];
   createdAt: string;
   updatedAt: string;
 }

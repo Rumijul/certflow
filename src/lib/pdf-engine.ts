@@ -114,5 +114,39 @@ export async function generateCertificatePdf(
     });
   }
 
+  // Draw image overlays (signatures, logos, crests, seals)
+  if (template.imageOverlays && template.imageOverlays.length > 0) {
+    for (const overlay of template.imageOverlays) {
+      if (!overlay.dataUrl) continue;
+      try {
+        const cleanBase64 = overlay.dataUrl.replace(/^data:image\/\w+;base64,/, '');
+        const overlayBuffer = Buffer.from(cleanBase64, 'base64');
+        let embeddedOverlay;
+        try {
+          embeddedOverlay = await pdfDoc.embedPng(overlayBuffer);
+        } catch {
+          embeddedOverlay = await pdfDoc.embedJpg(overlayBuffer);
+        }
+
+        const overlayWidth = (overlay.width / 100) * width;
+        // Calculate height keeping aspect ratio
+        const overlayHeight = overlay.aspectRatio ? overlayWidth / overlay.aspectRatio : overlayWidth;
+        const overlayX = (overlay.x / 100) * width;
+        const overlayYFromTop = (overlay.y / 100) * height;
+        // In PDF coordinate system, origin is bottom-left
+        const overlayY = height - overlayYFromTop - overlayHeight;
+
+        page.drawImage(embeddedOverlay, {
+          x: overlayX,
+          y: overlayY,
+          width: overlayWidth,
+          height: overlayHeight,
+        });
+      } catch (err) {
+        console.error('Failed to embed overlay image:', overlay.name, err);
+      }
+    }
+  }
+
   return await pdfDoc.save();
 }
