@@ -1,12 +1,9 @@
-# CertFlow 🎓
+# CertFlow
 
 > An offline-first, modern web application for batch certificate generation, visual layout positioning, and automated email dispatch with social sharing links.
-
-Built for work immersion cohorts, event organizers, school administrators, and training programs.
-
 ---
 
-## 🌟 Key Features
+## Key Features
 
 1. **Step 1: Visual Template Positioning**
    - Upload any high-res certificate image (`.png` / `.jpg`).
@@ -17,7 +14,7 @@ Built for work immersion cohorts, event organizers, school administrators, and t
 2. **Step 2: Participant Roster Ingestion**
    - Drag-and-drop support for `.xlsx`, `.xls`, and `.csv`.
    - Heuristic column detector automatically finds participant names and email addresses.
-   - 1-click test roster button for quick demonstrations.
+   - 1-click test button for quick demonstrations.
 
 3. **Step 3 & 4: Auto-Shrink Font Engine & Visual Review**
    - High-fidelity vector PDF generation matching the certificate's exact resolution.
@@ -56,7 +53,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## ⚙️ SMTP Setup (Optional for Email Delivery)
+## SMTP Setup
 
 1. Click the **Settings** button in the top navigation bar.
 2. Enter your SMTP details:
@@ -65,7 +62,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework:** Next.js 14 (App Router)
 - **Styling:** Tailwind CSS, Lucide Icons
