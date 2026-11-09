@@ -165,40 +165,55 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
     setIsDraggingOverlay(true);
   };
 
+  const rafRef = useRef<number | null>(null);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
 
-      if (isDraggingField && selectedField) {
-        let newX = (mouseX / rect.width) * 100 - selectedField.width / 2;
-        let newY = (mouseY / rect.height) * 100 - 3;
-        newX = Math.max(0, Math.min(100 - selectedField.width, newX));
-        newY = Math.max(0, Math.min(95, newY));
-        updateSelectedField({ x: Math.round(newX * 10) / 10, y: Math.round(newY * 10) / 10 });
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
       }
 
-      if (isDraggingOverlay && selectedOverlay) {
-        let newX = (mouseX / rect.width) * 100 - selectedOverlay.width / 2;
-        let newY = (mouseY / rect.height) * 100 - 3;
-        newX = Math.max(0, Math.min(100 - selectedOverlay.width, newX));
-        newY = Math.max(0, Math.min(95, newY));
-        updateSelectedOverlay({ x: Math.round(newX * 10) / 10, y: Math.round(newY * 10) / 10 });
-      }
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+
+      rafRef.current = requestAnimationFrame(() => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const mouseX = clientX - rect.left;
+        const mouseY = clientY - rect.top;
+
+        if (isDraggingField && selectedField) {
+          let newX = (mouseX / rect.width) * 100 - selectedField.width / 2;
+          let newY = (mouseY / rect.height) * 100 - 3;
+          newX = Math.max(0, Math.min(100 - selectedField.width, newX));
+          newY = Math.max(0, Math.min(95, newY));
+          updateSelectedField({ x: Math.round(newX * 10) / 10, y: Math.round(newY * 10) / 10 });
+        }
+
+        if (isDraggingOverlay && selectedOverlay) {
+          let newX = (mouseX / rect.width) * 100 - selectedOverlay.width / 2;
+          let newY = (mouseY / rect.height) * 100 - 3;
+          newX = Math.max(0, Math.min(100 - selectedOverlay.width, newX));
+          newY = Math.max(0, Math.min(95, newY));
+          updateSelectedOverlay({ x: Math.round(newX * 10) / 10, y: Math.round(newY * 10) / 10 });
+        }
+      });
     };
 
     const handleMouseUp = () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
       setIsDraggingField(false);
       setIsDraggingOverlay(false);
     };
 
     if (isDraggingField || isDraggingOverlay) {
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
       window.addEventListener('mouseup', handleMouseUp);
     }
     return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
@@ -262,7 +277,7 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                         top: `${overlay.y}%`,
                         width: `${overlay.width}%`,
                       }}
-                      className={`absolute cursor-move select-none p-1 transition-all ${
+                      className={`absolute cursor-move select-none p-1 will-change-transform ${
                         isSelected
                           ? 'border-2 border-amber-500 bg-amber-500/10'
                           : 'border border-dashed border-slate-500/60 hover:border-amber-400'
@@ -310,7 +325,7 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                         fontWeight: field.bold ? 'bold' : 'normal',
                         textAlign: field.align,
                       }}
-                      className={`absolute cursor-move select-none transition-all ${
+                      className={`absolute cursor-move select-none will-change-transform ${
                         isSelected
                           ? 'border-2 border-blue-500 bg-blue-500/10'
                           : 'border border-dashed border-slate-500/60 hover:border-blue-400'
