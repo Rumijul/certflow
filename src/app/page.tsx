@@ -75,43 +75,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0c0e12] text-slate-200 flex flex-col font-sans">
-      {/* Top Application Bar */}
+      {/* Combined Header & Stepper Navigation Bar */}
       <header className="border-b border-[#242b3b] bg-[#14171f] sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
-              <Award className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-white tracking-tight">CertFlow</span>
-                <span className="text-[10px] font-mono uppercase bg-slate-800 text-slate-300 border border-slate-700 px-1.5 py-0.5 rounded">
-                  v1.0
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded bg-[#1b202c] border border-[#242b3b] text-xs text-slate-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>Offline-ready</span>
-            </div>
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="px-3 py-1.5 rounded bg-[#1b202c] hover:bg-[#242b3b] border border-[#242b3b] hover:text-white text-slate-300 text-xs font-medium transition flex items-center gap-1.5"
-            >
-              <Settings className="w-3.5 h-3.5 text-slate-400" />
-              Settings
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Stepper Bar */}
-      <div className="border-b border-[#242b3b] bg-[#10131a] py-2.5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between md:justify-center md:gap-8 overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+          {/* Stepper Workflow Buttons */}
+          <div className="flex items-center gap-2 sm:gap-6 md:gap-8 overflow-x-auto py-1">
             {steps.map((s, idx) => {
               const Icon = s.icon;
               const isActive = currentStep === s.number;
@@ -146,14 +114,23 @@ export default function Home() {
                     </div>
                   </button>
                   {idx < steps.length - 1 && (
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-600 hidden md:block shrink-0" />
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-600 hidden sm:block shrink-0" />
                   )}
                 </React.Fragment>
               );
             })}
           </div>
+
+          {/* Right Action: Only Settings */}
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="px-3 py-1.5 rounded bg-[#1b202c] hover:bg-[#242b3b] border border-[#242b3b] hover:text-white text-slate-300 text-xs font-medium transition flex items-center gap-1.5 shrink-0"
+          >
+            <Settings className="w-3.5 h-3.5 text-slate-400" />
+            Settings
+          </button>
         </div>
-      </div>
+      </header>
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
