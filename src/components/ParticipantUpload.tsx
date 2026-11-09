@@ -29,11 +29,9 @@ export function ParticipantUpload({
       return;
     }
 
-    // Attempt to detect column headers
     const firstRow = rows[0];
     const keys = Object.keys(firstRow);
 
-    // Heuristics for name & email columns
     const nameKey = keys.find((k) =>
       /^(full[_\s]?name|name|participant|student|attendee)$/i.test(k.trim())
     ) || keys[0];
@@ -104,40 +102,37 @@ export function ParticipantUpload({
       { id: '4', name: 'Chloe Francesca Reyes-Villanueva', email: 'chloe.reyes@gmail.com', approved: true, status: 'pending' as const },
       { id: '5', name: 'Mark Andrei Alcantara', email: 'andrei.alcantara@ess.edu.ph', approved: true, status: 'pending' as const },
     ];
-    setFileName('sample_work_immersion_cohort.xlsx');
+    setFileName('sample_cohort_2026.xlsx');
     onUpload(dummy);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#242b3b]">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">Step 2 of 6</span>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Upload Participant List</h2>
-          <p className="text-sm text-slate-400 mt-1">
-            Drop an Excel (.xlsx/.xls) or CSV file containing participant names and email addresses.
-          </p>
+          <div className="text-[11px] font-mono uppercase text-slate-400">Step 2 — Roster Ingestion</div>
+          <h2 className="text-lg font-bold text-white tracking-tight">Upload Participant Roster</h2>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={onBack}
-            className="px-4 py-2 hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-400 transition"
+            className="px-3 py-1.5 rounded bg-[#1b202c] hover:bg-[#242b3b] border border-[#242b3b] text-xs font-medium text-slate-300 transition"
           >
             Back
           </button>
           <button
             onClick={onNext}
             disabled={participants.length === 0}
-            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-xs font-semibold text-white shadow-lg shadow-indigo-600/30 transition flex items-center gap-1.5"
+            className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed rounded text-xs font-semibold text-white transition flex items-center gap-1.5"
           >
-            Generate Certificates ({participants.length}) <ArrowRight className="w-4 h-4" />
+            Next: Review ({participants.length}) <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Drag and Drop Zone */}
+      {/* Upload Drop Zone */}
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -150,23 +145,21 @@ export function ParticipantUpload({
           const file = e.dataTransfer.files?.[0];
           if (file) handleFileUpload(file);
         }}
-        className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition flex flex-col items-center justify-center min-h-[220px] ${
+        className={`border border-dashed rounded-lg p-6 text-center transition flex flex-col items-center justify-center min-h-[160px] ${
           dragActive
-            ? 'border-indigo-500 bg-indigo-500/10'
-            : 'border-slate-800 hover:border-slate-700 bg-slate-950/60'
+            ? 'border-blue-500 bg-blue-950/20'
+            : 'border-[#242b3b] hover:border-slate-600 bg-[#14171f]'
         }`}
       >
-        <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-400 mb-4">
-          <FileSpreadsheet className="w-8 h-8" />
-        </div>
-        <h3 className="text-base font-semibold text-white">Drag & drop your Excel or CSV roster</h3>
-        <p className="text-xs text-slate-400 max-w-sm mt-1">
-          Supports columns for <strong>Full Name</strong> and <strong>Email Address</strong>. Extra columns will be preserved automatically.
+        <FileSpreadsheet className="w-6 h-6 text-slate-400 mb-2" />
+        <h3 className="text-sm font-semibold text-white">Drop .xlsx, .xls, or .csv roster</h3>
+        <p className="text-xs text-slate-400 max-w-sm mt-0.5">
+          Columns for Name and Email will be automatically detected.
         </p>
 
-        <div className="flex items-center gap-3 mt-5">
-          <label className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-md transition flex items-center gap-1.5">
-            <Upload className="w-3.5 h-3.5" /> Browse Files
+        <div className="flex items-center gap-2 mt-4">
+          <label className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-semibold cursor-pointer transition flex items-center gap-1.5">
+            <Upload className="w-3.5 h-3.5" /> Select File
             <input
               type="file"
               accept=".xlsx,.xls,.csv"
@@ -177,11 +170,11 @@ export function ParticipantUpload({
               className="hidden"
             />
           </label>
-          <span className="text-xs text-slate-500">or</span>
+          <span className="text-xs text-slate-600">or</span>
           <button
             type="button"
             onClick={loadSampleData}
-            className="px-3.5 py-2 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700 transition"
+            className="px-3 py-1.5 bg-[#1b202c] hover:bg-[#242b3b] text-slate-300 rounded text-xs font-medium border border-[#242b3b] transition"
           >
             Load 5 Test Records
           </button>
@@ -189,7 +182,7 @@ export function ParticipantUpload({
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl flex items-center gap-3 text-xs text-rose-300">
+        <div className="p-3 bg-rose-950/30 border border-rose-800/50 rounded flex items-center gap-2 text-xs text-rose-300">
           <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
           <span>{error}</span>
         </div>
@@ -197,46 +190,46 @@ export function ParticipantUpload({
 
       {/* Participants Preview Table */}
       {participants.length > 0 && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-          <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50">
+        <div className="bg-[#14171f] border border-[#242b3b] rounded-lg overflow-hidden">
+          <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[#242b3b] bg-[#10131a]">
             <div className="flex items-center gap-2">
               <UserCheck className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-sm font-bold text-white">
-                Detected Participants ({participants.length})
-              </h3>
+              <span className="text-xs font-bold text-white">
+                Roster Preview ({participants.length} entries)
+              </span>
             </div>
             {fileName && (
-              <span className="text-xs font-mono text-slate-400 flex items-center gap-1 bg-slate-800 px-2.5 py-1 rounded-lg">
-                <FileText className="w-3 h-3 text-indigo-400" /> {fileName}
+              <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1 bg-[#1b202c] px-2 py-0.5 rounded border border-[#242b3b]">
+                <FileText className="w-3 h-3 text-slate-400" /> {fileName}
               </span>
             )}
           </div>
 
-          <div className="overflow-x-auto max-h-[340px]">
+          <div className="overflow-x-auto max-h-[300px]">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/70 text-slate-400 uppercase tracking-wider sticky top-0 border-b border-slate-800">
+              <thead className="bg-[#0c0e12] text-slate-400 uppercase tracking-wider sticky top-0 border-b border-[#242b3b]">
                 <tr>
-                  <th className="px-4 py-3">#</th>
-                  <th className="px-4 py-3">Participant Full Name</th>
-                  <th className="px-4 py-3">Email Address</th>
-                  <th className="px-4 py-3 text-right">Action</th>
+                  <th className="px-3.5 py-2 font-mono text-[11px]">#</th>
+                  <th className="px-3.5 py-2 font-mono text-[11px]">Participant Name</th>
+                  <th className="px-3.5 py-2 font-mono text-[11px]">Email</th>
+                  <th className="px-3.5 py-2 font-mono text-[11px] text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-[#242b3b]">
                 {participants.map((p, idx) => (
-                  <tr key={p.id} className="hover:bg-slate-850/50 transition">
-                    <td className="px-4 py-3 text-slate-500 font-mono">{idx + 1}</td>
-                    <td className="px-4 py-3 font-semibold text-slate-200">{p.name}</td>
-                    <td className="px-4 py-3 text-slate-400 font-mono">
-                      {p.email || <span className="text-amber-500/80 italic">No email</span>}
+                  <tr key={p.id} className="hover:bg-[#1b202c] transition">
+                    <td className="px-3.5 py-2 text-slate-500 font-mono">{idx + 1}</td>
+                    <td className="px-3.5 py-2 font-medium text-slate-200">{p.name}</td>
+                    <td className="px-3.5 py-2 text-slate-400 font-mono">
+                      {p.email || <span className="text-amber-400/80 italic">No email</span>}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-3.5 py-2 text-right">
                       <button
                         onClick={() => {
                           const updated = participants.filter((item) => item.id !== p.id);
                           onUpload(updated);
                         }}
-                        className="text-slate-500 hover:text-rose-400 transition"
+                        className="text-slate-500 hover:text-rose-400 transition text-xs"
                       >
                         Remove
                       </button>

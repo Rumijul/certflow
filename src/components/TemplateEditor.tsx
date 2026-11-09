@@ -205,43 +205,39 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
   }, [isDraggingField, isDraggingOverlay, selectedField, selectedOverlay]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Step Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#242b3b]">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">Step 1 of 6</span>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Select or Upload Certificate Template</h2>
-          <p className="text-sm text-slate-400 mt-1">
-            Upload your certificate design, add logos or e-signatures, and position variables.
-          </p>
+          <div className="text-[11px] font-mono uppercase text-slate-400">Step 1 — Template & Layout</div>
+          <h2 className="text-lg font-bold text-white tracking-tight">Configure Certificate Template</h2>
         </div>
 
-        <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-xl text-xs font-semibold text-slate-200 cursor-pointer transition shadow-sm">
-            <Upload className="w-4 h-4 text-indigo-400" />
-            Upload New Template
+        <div className="flex items-center gap-2">
+          <label className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1b202c] hover:bg-[#242b3b] border border-[#242b3b] rounded text-xs font-medium text-slate-200 cursor-pointer transition">
+            <Upload className="w-3.5 h-3.5 text-slate-400" />
+            Upload Background
             <input type="file" accept="image/png,image/jpeg" onChange={handleImageUpload} className="hidden" />
           </label>
           <button
             onClick={onNext}
             disabled={!template.imageDataUrl}
-            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-xs font-semibold text-white shadow-lg shadow-indigo-600/30 transition flex items-center gap-1.5"
+            className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed rounded text-xs font-semibold text-white transition flex items-center gap-1.5"
           >
-            Confirm & Next: Participants <Check className="w-4 h-4" />
+            Next: Participants <Check className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
       {/* Main Workspace Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Visual Canvas Area */}
-        <div className="lg:col-span-8 flex flex-col items-center justify-center bg-slate-950 border border-slate-800 rounded-2xl p-4 md:p-8 min-h-[500px]">
+        <div className="lg:col-span-8 flex flex-col items-center justify-center bg-[#10131a] border border-[#242b3b] rounded-lg p-4 min-h-[460px]">
           {template.imageDataUrl ? (
             <div className="relative w-full max-w-4xl select-none group">
-              {/* Outer container matching certificate aspect ratio */}
               <div
                 ref={containerRef}
-                className="relative overflow-hidden rounded-xl shadow-2xl border border-slate-800 bg-white [container-type:size]"
+                className="relative overflow-hidden rounded border border-[#242b3b] bg-white [container-type:size]"
                 style={{
                   aspectRatio: `${template.width || 1920} / ${template.height || 1080}`,
                 }}
@@ -253,7 +249,7 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                   className="w-full h-full object-contain pointer-events-none"
                 />
 
-                {/* Draggable Image Overlays (Signatures, Logos, Seals) */}
+                {/* Image Overlays */}
                 {template.imageOverlays?.map((overlay) => {
                   const isSelected = selectedOverlay?.id === overlay.id;
 
@@ -266,10 +262,10 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                         top: `${overlay.y}%`,
                         width: `${overlay.width}%`,
                       }}
-                      className={`absolute cursor-move select-none p-1 transition-shadow ${
+                      className={`absolute cursor-move select-none p-1 transition-all ${
                         isSelected
-                          ? 'border-2 border-amber-500 bg-amber-500/10 shadow-lg ring-2 ring-amber-400/20 rounded'
-                          : 'border border-dashed border-slate-400/50 hover:border-amber-400'
+                          ? 'border-2 border-amber-500 bg-amber-500/10'
+                          : 'border border-dashed border-slate-500/60 hover:border-amber-400'
                       }`}
                     >
                       <img
@@ -278,7 +274,7 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                         className="w-full h-auto object-contain pointer-events-none"
                       />
                       {isSelected && (
-                        <div className="absolute -top-6 left-0 bg-amber-600 text-white text-[10px] font-mono px-1.5 py-0.5 rounded shadow whitespace-nowrap">
+                        <div className="absolute -top-5 left-0 bg-amber-600 text-white text-[10px] font-mono px-1 py-0.2 rounded whitespace-nowrap">
                           {overlay.name} ({overlay.x.toFixed(0)}%, {overlay.y.toFixed(0)}%)
                         </div>
                       )}
@@ -286,7 +282,7 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                   );
                 })}
 
-                {/* Interactive Dynamic Text Placeholders */}
+                {/* Text Placeholders */}
                 {template.fields.map((field) => {
                   const isSelected = selectedField?.id === field.id && !selectedOverlayId;
                   const displayName =
@@ -314,10 +310,10 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                         fontWeight: field.bold ? 'bold' : 'normal',
                         textAlign: field.align,
                       }}
-                      className={`absolute cursor-move select-none transition-shadow ${
+                      className={`absolute cursor-move select-none transition-all ${
                         isSelected
-                          ? 'border-2 border-indigo-500 bg-indigo-500/10 shadow-lg ring-2 ring-indigo-400/20 rounded'
-                          : 'border border-dashed border-slate-400/50 hover:border-indigo-400 bg-white/20 backdrop-blur-[1px]'
+                          ? 'border-2 border-blue-500 bg-blue-500/10'
+                          : 'border border-dashed border-slate-500/60 hover:border-blue-400'
                       }`}
                     >
                       <div
@@ -330,7 +326,7 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                       </div>
 
                       {isSelected && (
-                        <div className="absolute -top-6 left-0 bg-indigo-600 text-white text-[10px] font-mono px-1.5 py-0.5 rounded shadow whitespace-nowrap">
+                        <div className="absolute -top-5 left-0 bg-blue-600 text-white text-[10px] font-mono px-1 py-0.2 rounded whitespace-nowrap">
                           {field.name} ({field.x.toFixed(0)}%, {field.y.toFixed(0)}%)
                         </div>
                       )}
@@ -339,46 +335,46 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                 })}
               </div>
 
-              {/* Quick Canvas Helpers */}
-              <div className="flex items-center justify-between text-xs text-slate-400 mt-3 px-2">
+              {/* Helpers */}
+              <div className="flex items-center justify-between text-xs text-slate-400 mt-2 px-1">
                 <span className="flex items-center gap-1.5">
-                  <Move className="w-3.5 h-3.5 text-indigo-400" /> Click and drag any element to position
+                  <Move className="w-3.5 h-3.5 text-slate-400" /> Click and drag boxes to position
                 </span>
                 <button
                   type="button"
                   onClick={() => setSampleLongName(!sampleLongName)}
-                  className="hover:text-indigo-400 flex items-center gap-1 transition"
+                  className="hover:text-blue-400 flex items-center gap-1 transition"
                 >
                   <Eye className="w-3.5 h-3.5" />
-                  {sampleLongName ? 'Show Placeholder' : 'Test Long Name (Overflow check)'}
+                  {sampleLongName ? 'Show Placeholder' : 'Test Long Name'}
                 </button>
               </div>
             </div>
           ) : (
-            <div className="text-center p-8 space-y-4">
-              <Upload className="w-12 h-12 text-slate-600 mx-auto animate-bounce" />
-              <p className="text-sm text-slate-400">No template loaded. Choose an image to begin.</p>
+            <div className="text-center p-8 space-y-2">
+              <Upload className="w-8 h-8 text-slate-500 mx-auto" />
+              <p className="text-xs text-slate-400">No template loaded. Choose an image to begin.</p>
             </div>
           )}
         </div>
 
-        {/* Property Inspector & Field / Overlay Controls */}
-        <div className="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-5">
-          {/* Tabs: Text Fields vs Image Overlays */}
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+        {/* Inspector Panel */}
+        <div className="lg:col-span-4 bg-[#14171f] border border-[#242b3b] rounded-lg p-4 space-y-4">
+          {/* Segmented Switcher */}
+          <div className="flex bg-[#0c0e12] p-0.5 rounded border border-[#242b3b]">
             <button
               onClick={() => {
                 setActiveTab('text');
                 setSelectedOverlayId(null);
                 if (!selectedFieldId) setSelectedFieldId(template.fields[0]?.id || null);
               }}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition ${
+              className={`flex-1 py-1 text-xs font-semibold rounded flex items-center justify-center gap-1.5 transition ${
                 activeTab === 'text'
-                  ? 'bg-indigo-600 text-white shadow'
+                  ? 'bg-blue-600 text-white'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <Type className="w-3.5 h-3.5" /> Text Fields
+              <Type className="w-3 h-3" /> Text Fields
             </button>
             <button
               onClick={() => {
@@ -388,33 +384,31 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                   setSelectedOverlayId(template.imageOverlays[0].id);
                 }
               }}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition ${
+              className={`flex-1 py-1 text-xs font-semibold rounded flex items-center justify-center gap-1.5 transition ${
                 activeTab === 'image'
-                  ? 'bg-amber-600 text-white shadow'
+                  ? 'bg-amber-600 text-white'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <ImageIcon className="w-3.5 h-3.5" /> Logos & Signatures
+              <ImageIcon className="w-3 h-3" /> Overlays
             </button>
           </div>
 
           {/* TAB 1: TEXT FIELDS */}
           {activeTab === 'text' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                  Text Variables
-                </h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#242b3b]">
+                <span className="text-[11px] font-mono uppercase text-slate-400">Variables</span>
                 <button
                   onClick={addCustomField}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1"
+                  className="text-xs text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1"
                 >
-                  <Plus className="w-3.5 h-3.5" /> Add Field
+                  <Plus className="w-3 h-3" /> Add Field
                 </button>
               </div>
 
-              {/* Active Field Selector Tabs */}
-              <div className="flex flex-wrap gap-1.5">
+              {/* Active Field Tabs */}
+              <div className="flex flex-wrap gap-1">
                 {template.fields.map((f) => (
                   <button
                     key={f.id}
@@ -422,10 +416,10 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                       setSelectedFieldId(f.id);
                       setSelectedOverlayId(null);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+                    className={`px-2.5 py-1 rounded text-xs font-medium transition ${
                       selectedField?.id === f.id && !selectedOverlayId
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-[#1b202c] text-slate-400 hover:text-slate-200 border border-[#242b3b]'
                     }`}
                   >
                     {f.name}
@@ -434,55 +428,53 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
               </div>
 
               {selectedField ? (
-                <div className="space-y-4 pt-2">
+                <div className="space-y-3 pt-1">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-400 mb-1.5">Field Label</label>
+                    <label className="block text-xs text-slate-400 mb-1">Field Name</label>
                     <input
                       type="text"
                       value={selectedField.name}
                       onChange={(e) => updateSelectedField({ name: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200"
+                      className="w-full px-2.5 py-1.5 bg-[#0c0e12] border border-[#242b3b] rounded text-xs text-slate-200"
                     />
                   </div>
 
-                  {/* Font Family & Color */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-400 mb-1.5">Font Style</label>
+                      <label className="block text-xs text-slate-400 mb-1">Font Family</label>
                       <select
                         value={selectedField.fontFamily}
                         onChange={(e: any) => updateSelectedField({ fontFamily: e.target.value })}
-                        className="w-full px-2.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200"
+                        className="w-full px-2 py-1.5 bg-[#0c0e12] border border-[#242b3b] rounded text-xs text-slate-200"
                       >
-                        <option value="Helvetica">Modern (Helvetica)</option>
-                        <option value="Times-Roman">Classic (Times Serif)</option>
-                        <option value="Courier">Monospace (Courier)</option>
+                        <option value="Helvetica">Modern (Sans)</option>
+                        <option value="Times-Roman">Classic (Serif)</option>
+                        <option value="Courier">Monospace</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-400 mb-1.5">Text Color</label>
-                      <div className="flex items-center gap-2">
+                      <label className="block text-xs text-slate-400 mb-1">Color</label>
+                      <div className="flex items-center gap-1.5">
                         <input
                           type="color"
                           value={selectedField.color}
                           onChange={(e) => updateSelectedField({ color: e.target.value })}
-                          className="w-8 h-8 rounded-lg bg-transparent border-0 cursor-pointer"
+                          className="w-7 h-7 rounded bg-transparent border-0 cursor-pointer"
                         />
                         <input
                           type="text"
                           value={selectedField.color}
                           onChange={(e) => updateSelectedField({ color: e.target.value })}
-                          className="flex-1 px-2.5 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 font-mono"
+                          className="flex-1 px-2 py-1 bg-[#0c0e12] border border-[#242b3b] rounded text-xs text-slate-200 font-mono"
                         />
                       </div>
                     </div>
                   </div>
 
-                  {/* Font Size */}
                   <div>
-                    <div className="flex justify-between text-xs text-slate-400 mb-1.5">
-                      <span className="font-semibold">Base Font Size</span>
-                      <span className="font-mono">{selectedField.fontSize}pt</span>
+                    <div className="flex justify-between text-xs text-slate-400 mb-1">
+                      <span>Base Font Size</span>
+                      <span className="font-mono text-slate-300">{selectedField.fontSize}pt</span>
                     </div>
                     <input
                       type="range"
@@ -490,15 +482,14 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                       max="72"
                       value={selectedField.fontSize}
                       onChange={(e) => updateSelectedField({ fontSize: Number(e.target.value) })}
-                      className="w-full accent-indigo-500"
+                      className="w-full accent-blue-500"
                     />
                   </div>
 
-                  {/* Bounding Box Width */}
                   <div>
-                    <div className="flex justify-between text-xs text-slate-400 mb-1.5">
-                      <span className="font-semibold">Safe Box Width</span>
-                      <span className="font-mono">{selectedField.width}%</span>
+                    <div className="flex justify-between text-xs text-slate-400 mb-1">
+                      <span>Safe Boundary Width</span>
+                      <span className="font-mono text-slate-300">{selectedField.width}%</span>
                     </div>
                     <input
                       type="range"
@@ -506,57 +497,56 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                       max="95"
                       value={selectedField.width}
                       onChange={(e) => updateSelectedField({ width: Number(e.target.value) })}
-                      className="w-full accent-indigo-500"
+                      className="w-full accent-blue-500"
                     />
                   </div>
 
-                  {/* Alignment & Bold */}
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1 gap-1">
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center bg-[#0c0e12] border border-[#242b3b] rounded p-0.5 gap-0.5">
                       <button
                         onClick={() => updateSelectedField({ align: 'left' })}
-                        className={`p-1.5 rounded-lg ${
-                          selectedField.align === 'left' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+                        className={`p-1 rounded ${
+                          selectedField.align === 'left' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
                         }`}
                       >
-                        <AlignLeft className="w-3.5 h-3.5" />
+                        <AlignLeft className="w-3 h-3" />
                       </button>
                       <button
                         onClick={() => updateSelectedField({ align: 'center' })}
-                        className={`p-1.5 rounded-lg ${
-                          selectedField.align === 'center' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+                        className={`p-1 rounded ${
+                          selectedField.align === 'center' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
                         }`}
                       >
-                        <AlignCenter className="w-3.5 h-3.5" />
+                        <AlignCenter className="w-3 h-3" />
                       </button>
                       <button
                         onClick={() => updateSelectedField({ align: 'right' })}
-                        className={`p-1.5 rounded-lg ${
-                          selectedField.align === 'right' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+                        className={`p-1 rounded ${
+                          selectedField.align === 'right' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
                         }`}
                       >
-                        <AlignRight className="w-3.5 h-3.5" />
+                        <AlignRight className="w-3 h-3" />
                       </button>
                     </div>
 
                     <button
                       onClick={() => updateSelectedField({ bold: !selectedField.bold })}
-                      className={`px-3 py-1.5 border rounded-xl text-xs font-semibold flex items-center gap-1.5 ${
+                      className={`px-2.5 py-1 border rounded text-xs font-semibold flex items-center gap-1 ${
                         selectedField.bold
-                          ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300'
-                          : 'border-slate-800 text-slate-400 hover:text-white'
+                          ? 'bg-blue-600/20 border-blue-500 text-blue-300'
+                          : 'border-[#242b3b] text-slate-400 hover:text-white'
                       }`}
                     >
-                      <Bold className="w-3.5 h-3.5" /> Bold
+                      <Bold className="w-3 h-3" /> Bold
                     </button>
                   </div>
 
                   {template.fields.length > 1 && (
                     <button
                       onClick={() => removeField(selectedField.id)}
-                      className="w-full mt-4 py-2 border border-rose-500/20 hover:bg-rose-500/10 text-rose-400 text-xs font-medium rounded-xl transition flex items-center justify-center gap-1.5"
+                      className="w-full mt-2 py-1.5 border border-rose-500/20 hover:bg-rose-500/10 text-rose-400 text-xs rounded transition flex items-center justify-center gap-1"
                     >
-                      <Trash2 className="w-3.5 h-3.5" /> Delete Field
+                      <Trash2 className="w-3 h-3" /> Delete Field
                     </button>
                   )}
                 </div>
@@ -564,21 +554,14 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
             </div>
           )}
 
-          {/* TAB 2: IMAGE OVERLAYS (SIGNATURES, LOGOS, SEALS) */}
+          {/* TAB 2: IMAGE OVERLAYS */}
           {activeTab === 'image' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                  Add Image Overlays
-                </h3>
-              </div>
-
-              {/* Upload buttons for Signatures & Logos */}
+            <div className="space-y-3">
               <div className="grid grid-cols-2 gap-2">
-                <label className="flex flex-col items-center justify-center p-3 border border-slate-800 hover:border-amber-500/50 bg-slate-950 rounded-xl cursor-pointer transition text-center group">
-                  <PenTool className="w-5 h-5 text-amber-400 mb-1.5 group-hover:scale-110 transition" />
-                  <span className="text-xs font-semibold text-slate-200">+ E-Signature</span>
-                  <span className="text-[10px] text-slate-500">Transparent PNG</span>
+                <label className="flex flex-col items-center justify-center p-2.5 border border-[#242b3b] hover:border-amber-500 bg-[#0c0e12] rounded cursor-pointer transition text-center">
+                  <PenTool className="w-4 h-4 text-amber-400 mb-1" />
+                  <span className="text-xs font-medium text-slate-200">+ Signature</span>
+                  <span className="text-[10px] text-slate-500">PNG</span>
                   <input
                     type="file"
                     accept="image/png,image/jpeg"
@@ -587,10 +570,10 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                   />
                 </label>
 
-                <label className="flex flex-col items-center justify-center p-3 border border-slate-800 hover:border-amber-500/50 bg-slate-950 rounded-xl cursor-pointer transition text-center group">
-                  <Stamp className="w-5 h-5 text-indigo-400 mb-1.5 group-hover:scale-110 transition" />
-                  <span className="text-xs font-semibold text-slate-200">+ Logo / Seal</span>
-                  <span className="text-[10px] text-slate-500">School / Org Emblem</span>
+                <label className="flex flex-col items-center justify-center p-2.5 border border-[#242b3b] hover:border-blue-500 bg-[#0c0e12] rounded cursor-pointer transition text-center">
+                  <Stamp className="w-4 h-4 text-blue-400 mb-1" />
+                  <span className="text-xs font-medium text-slate-200">+ Logo / Seal</span>
+                  <span className="text-[10px] text-slate-500">Badge / Crest</span>
                   <input
                     type="file"
                     accept="image/png,image/jpeg"
@@ -600,11 +583,10 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                 </label>
               </div>
 
-              {/* Active Overlays List */}
               {template.imageOverlays && template.imageOverlays.length > 0 ? (
-                <div className="space-y-3 pt-2">
-                  <div className="text-xs text-slate-400 font-semibold">Active Overlays:</div>
-                  <div className="flex flex-wrap gap-1.5">
+                <div className="space-y-2 pt-1">
+                  <span className="text-[11px] font-mono uppercase text-slate-400">Active Overlays:</span>
+                  <div className="flex flex-wrap gap-1">
                     {template.imageOverlays.map((o) => (
                       <button
                         key={o.id}
@@ -612,10 +594,10 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                           setSelectedOverlayId(o.id);
                           setSelectedFieldId(null);
                         }}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 ${
+                        className={`px-2.5 py-1 rounded text-xs font-medium transition flex items-center gap-1 ${
                           selectedOverlay?.id === o.id
                             ? 'bg-amber-600 text-white'
-                            : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                            : 'bg-[#1b202c] text-slate-400 hover:text-slate-200 border border-[#242b3b]'
                         }`}
                       >
                         {o.type === 'signature' ? <PenTool className="w-3 h-3" /> : <Stamp className="w-3 h-3" />}
@@ -625,24 +607,23 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                   </div>
 
                   {selectedOverlay && (
-                    <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 mt-3">
+                    <div className="p-3 bg-[#0c0e12] border border-[#242b3b] rounded space-y-3 mt-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-white capitalize">
+                        <span className="text-xs font-semibold text-white capitalize">
                           {selectedOverlay.name} ({selectedOverlay.type})
                         </span>
                         <button
                           onClick={() => removeOverlay(selectedOverlay.id)}
                           className="text-rose-400 hover:text-rose-300 text-xs flex items-center gap-1"
                         >
-                          <Trash2 className="w-3.5 h-3.5" /> Remove
+                          <Trash2 className="w-3 h-3" /> Remove
                         </button>
                       </div>
 
-                      {/* Scale / Width Slider */}
                       <div>
-                        <div className="flex justify-between text-xs text-slate-400 mb-1.5">
-                          <span className="font-semibold">Scale / Width</span>
-                          <span className="font-mono">{selectedOverlay.width}%</span>
+                        <div className="flex justify-between text-xs text-slate-400 mb-1">
+                          <span>Scale / Width</span>
+                          <span className="font-mono text-slate-300">{selectedOverlay.width}%</span>
                         </div>
                         <input
                           type="range"
@@ -653,16 +634,12 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                           className="w-full accent-amber-500"
                         />
                       </div>
-
-                      <p className="text-[11px] text-slate-500">
-                        Drag this image directly on the canvas to place it over the signature line or logo badge.
-                      </p>
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="p-6 text-center border border-dashed border-slate-800 rounded-xl text-xs text-slate-500">
-                  No logos or e-signatures added yet. Upload one above to place it anywhere on the certificate.
+                <div className="p-4 text-center border border-dashed border-[#242b3b] rounded text-xs text-slate-500">
+                  No overlays added yet.
                 </div>
               )}
             </div>
