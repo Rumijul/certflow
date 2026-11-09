@@ -167,7 +167,7 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
               {/* Outer container matching certificate aspect ratio */}
               <div
                 ref={containerRef}
-                className="relative overflow-hidden rounded-xl shadow-2xl border border-slate-800 bg-white"
+                className="relative overflow-hidden rounded-xl shadow-2xl border border-slate-800 bg-white [container-type:size]"
                 style={{
                   aspectRatio: `${template.width || 1920} / ${template.height || 1080}`,
                 }}
@@ -207,18 +207,23 @@ export function TemplateEditor({ template, onChange, onNext }: TemplateEditorPro
                         fontWeight: field.bold ? 'bold' : 'normal',
                         textAlign: field.align,
                       }}
-                      className={`absolute cursor-move px-2 py-1 transition-shadow ${
+                      className={`absolute cursor-move select-none transition-shadow ${
                         isSelected
                           ? 'border-2 border-indigo-500 bg-indigo-500/10 shadow-lg ring-2 ring-indigo-400/20 rounded'
                           : 'border border-dashed border-slate-400/50 hover:border-indigo-400 bg-white/20 backdrop-blur-[1px]'
                       }`}
                     >
-                      <div className="truncate text-center" style={{ fontSize: `clamp(10px, 2.5vw, ${field.fontSize}px)` }}>
+                      <div
+                        className="truncate leading-none"
+                        style={{
+                          fontSize: `calc(${field.fontSize} * (100cqh / 1080))`,
+                        }}
+                      >
                         {displayName}
                       </div>
 
                       {isSelected && (
-                        <div className="absolute -top-6 left-0 bg-indigo-600 text-white text-[10px] font-mono px-1.5 py-0.5 rounded shadow">
+                        <div className="absolute -top-6 left-0 bg-indigo-600 text-white text-[10px] font-mono px-1.5 py-0.5 rounded shadow whitespace-nowrap">
                           {field.name} ({field.x.toFixed(0)}%, {field.y.toFixed(0)}%)
                         </div>
                       )}

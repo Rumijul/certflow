@@ -76,16 +76,19 @@ export async function generateCertificatePdf(
     const boxY = height - boxYFromTop;
     const boxWidth = (field.width / 100) * width;
 
-    // Scale font size according to template resolution relative to 1000px base
-    const scaleFactor = Math.min(width, height) / 800;
-    let currentFontSize = Math.max(12, field.fontSize * scaleFactor);
+    // Convert pt (which is at native 1080p template scale) directly to PDF points
+    // The template width/height is native 1920x1080.
+    // In CSS preview, the font-size must match this ratio: (field.fontSize / 1080) * 100% of container height.
+    const nativeHeight = template.height || 1080;
+    const currentFontSize = (field.fontSize / 1080) * nativeHeight;
     const minFontSize = 14;
+    let computedFontSize = currentFontSize;
 
     // Auto-shrink loop: measure width and shrink font until it fits bounding box
-    let textWidth = font.widthOfTextAtSize(text, currentFontSize);
-    while (textWidth > boxWidth && currentFontSize > minFontSize) {
-      currentFontSize -= 1;
-      textWidth = font.widthOfTextAtSize(text, currentFontSize);
+    let textWidth = font.widthOfTextAtSize(text, computedFontSize);
+    while (textWidth > boxWidth && computedFontSize > minFontSize) {
+      computedFontSize -= 1;
+      textWidth = font.widthOfTextAtSize(text, computedFontSize);
     }
 
     // Alignment calculation
@@ -98,11 +101,14 @@ export async function generateCertificatePdf(
 
     const color = hexToRgb(field.color || '#000000');
 
-    // Draw the text
+    // Draw the text - center baseline inside the box height
+    // In pdf-lib, boxY is the top of the box. Baseline sits down from top.
+    const baselineY = boxY - computedFontSize;
+
     page.drawText(text, {
       x: drawX,
-      y: boxY - currentFontSize * 0.8, // adjust baseline
-      size: currentFontSize,
+      y: baselineY,
+      size: computedFontSize,
       font,
       color,
     });
